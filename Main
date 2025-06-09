@@ -1,0 +1,31 @@
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("ACS Phoenix Scouting Platform");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+
+        JTabbedPane tabs = new JTabbedPane();
+
+        Scout scout = new Scout();
+        Animate animate = new Animate();
+        Performance performance = new Performance();
+
+        performance.addMatchPoints(50);
+        performance.addMatchPoints(65);
+        performance.addMatchPoints(40);
+
+        tabs.add("Scout", scout.getPanel());
+        tabs.add("Strategy Animate", animate);
+        tabs.add("Performance", performance);
+
+        frame.add(tabs);
+        frame.setVisible(true);
+    }
+}
+
+
+
+
+
