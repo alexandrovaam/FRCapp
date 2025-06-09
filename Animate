@@ -1,0 +1,79 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Animate extends JPanel implements ActionListener {
+    private Timer timer;
+    private int step;
+    private final int maxSteps = 100;
+
+    private double robotX = 70;
+    private double robotY = 100;
+
+    private JButton restartButton;
+
+    public Animate() {
+        setPreferredSize(new Dimension(400, 450)); // Extra height for button
+        setLayout(null);
+
+        restartButton = new JButton("Restart");
+        restartButton.setBounds(150, 400, 100, 30);
+        add(restartButton);
+
+        restartButton.addActionListener(e -> restartAnimation());
+
+        timer = new Timer(30, this);
+        timer.start();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, 400, 400);
+
+        // Blue and red hexagons
+        g.setColor(Color.BLUE);
+        g.drawPolygon(new int[]{180, 200, 220, 220, 200, 180},
+                new int[]{140, 130, 140, 160, 170, 160}, 6);
+        g.setColor(Color.RED);
+        g.drawPolygon(new int[]{180, 200, 220, 220, 200, 180},
+                new int[]{260, 250, 260, 280, 290, 280}, 6);
+
+        // Green dots
+        g.setColor(Color.GREEN);
+        g.fillOval(100, 70, 10, 10);
+        g.fillOval(100, 100, 10, 10);
+        g.fillOval(100, 130, 10, 10);
+
+        // Robot
+        g.setColor(Color.CYAN);
+        g.fillRect((int)robotX, (int)robotY, 20, 20);
+        g.setColor(Color.BLACK);
+        g.drawString("9089", (int)robotX + 2, (int)robotY + 15);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (step < maxSteps) {
+            double t = step / (double) maxSteps;
+            robotX = 70 + t * 110;
+            robotY = 100 - 20 * Math.sin(Math.PI * t);
+
+            step++;
+            repaint();
+        } else {
+            timer.stop();
+        }
+    }
+
+    private void restartAnimation() {
+        step = 0;
+        robotX = 70;
+        robotY = 100;
+        timer.start();
+        repaint();
+    }
+}
