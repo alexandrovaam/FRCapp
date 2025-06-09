@@ -1,0 +1,74 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Scout {
+    private JPanel panel;
+    private JTextField teamNumberField;
+    private JTextField bestFeatureField;
+    private JCheckBox swerveDrive;
+    private JCheckBox tankDrive;
+    private JTextArea notesArea;
+    private JButton submitButton;
+    private JTable table;
+    private DefaultTableModel tableModel;
+
+    public Scout() {
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        teamNumberField = new JTextField(10);
+        bestFeatureField = new JTextField(10);
+        swerveDrive = new JCheckBox("Swerve Drive");
+        tankDrive = new JCheckBox("Tank Drive");
+        notesArea = new JTextArea(5, 20);
+        submitButton = new JButton("Submit");
+
+        String[] columns = {"Team #", "Best Feature", "Drive Type", "Notes"};
+        tableModel = new DefaultTableModel(columns, 0);
+        table = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(table);
+
+        panel.add(new JLabel("Team Number Observed:"));
+        panel.add(teamNumberField);
+
+        panel.add(new JLabel("Best Feature:"));
+        panel.add(bestFeatureField);
+
+        panel.add(new JLabel("Drive Type:"));
+        panel.add(swerveDrive);
+        panel.add(tankDrive);
+
+        panel.add(new JLabel("Additional Notes:"));
+        panel.add(new JScrollPane(notesArea));
+
+        panel.add(submitButton);
+        panel.add(new JLabel("Scouting Records:"));
+        panel.add(tableScrollPane);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String teamNumber = teamNumberField.getText();
+                String bestFeature = bestFeatureField.getText();
+                String driveType = (swerveDrive.isSelected() ? "Swerve" : "") +
+                        (swerveDrive.isSelected() && tankDrive.isSelected() ? " & " : "") +
+                        (tankDrive.isSelected() ? "Tank" : "");
+                String notes = notesArea.getText();
+
+                tableModel.addRow(new Object[]{teamNumber, bestFeature, driveType, notes});
+
+                teamNumberField.setText("");
+                bestFeatureField.setText("");
+                swerveDrive.setSelected(false);
+                tankDrive.setSelected(false);
+                notesArea.setText("");
+            }
+        });
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+}
