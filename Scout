@@ -1,7 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Scout {
     private JPanel panel;
@@ -13,6 +14,9 @@ public class Scout {
     private JButton submitButton;
     private JTable table;
     private DefaultTableModel tableModel;
+
+    private ArrayList<String[]> records = new ArrayList<>();
+    private final String FILE_NAME = "scouting_data.csv";
 
     public Scout() {
         panel = new JPanel();
@@ -47,25 +51,58 @@ public class Scout {
         panel.add(new JLabel("Scouting Records:"));
         panel.add(tableScrollPane);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String teamNumber = teamNumberField.getText();
-                String bestFeature = bestFeatureField.getText();
-                String driveType = (swerveDrive.isSelected() ? "Swerve" : "") +
-                        (swerveDrive.isSelected() && tankDrive.isSelected() ? " & " : "") +
-                        (tankDrive.isSelected() ? "Tank" : "");
-                String notes = notesArea.getText();
+        loadDataFromFile();
 
-                tableModel.addRow(new Object[]{teamNumber, bestFeature, driveType, notes});
+        submitButton.addActionListener(e -> addRecord());
+    }
 
-                teamNumberField.setText("");
-                bestFeatureField.setText("");
-                swerveDrive.setSelected(false);
-                tankDrive.setSelected(false);
-                notesArea.setText("");
+    private void addRecord() {
+        String teamNumber = teamNumberField.getText().trim();
+        String bestFeature = bestFeatureField.getText().trim();
+        String driveType = (swerveDrive.isSelected() ? "Swerve" : "") +
+                (swerveDrive.isSelected() && tankDrive.isSelected() ? " & " : "") +
+                (tankDrive.isSelected() ? "Tank" : "");
+        String notes = notesArea.getText().trim();
+
+        if (teamNumber.isEmpty()) return;
+
+        String[] record = {teamNumber, bestFeature, driveType, notes};
+        tableModel.addRow(record);
+        records.add(record);
+        saveDataToFile();
+
+        teamNumberField.setText("");
+        bestFeatureField.setText("");
+        swerveDrive.setSelected(false);
+        tankDrive.setSelected(false);
+        notesArea.setText("");
+    }
+
+    private void loadDataFromFile() {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            records.clear();
+            while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",", -1);
+                tableModel.addRow(row);
+                records.add(row);
             }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveDataToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME))) {
+            for (String[] row : records) {
+                writer.println(String.join(",", row));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public JPanel getPanel() {
