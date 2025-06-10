@@ -10,22 +10,11 @@ public class Main {
 
         Scout scout = new Scout();
         Animate animate = new Animate();
-        Performance performance = new Performance();
-
-        performance.addMatchPoints(50);
-        performance.addMatchPoints(65);
-        performance.addMatchPoints(40);
 
         tabs.add("Scout", scout.getPanel());
         tabs.add("Strategy Animate", animate);
-        tabs.add("Performance", performance);
 
         frame.add(tabs);
         frame.setVisible(true);
     }
 }
-
-
-
-
-
