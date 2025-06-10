@@ -34,7 +34,6 @@ public class Animate extends JPanel implements ActionListener {
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, 400, 400);
 
-        // Blue and red hexagons
         g.setColor(Color.BLUE);
         g.drawPolygon(new int[]{180, 200, 220, 220, 200, 180},
                 new int[]{140, 130, 140, 160, 170, 160}, 6);
@@ -42,13 +41,11 @@ public class Animate extends JPanel implements ActionListener {
         g.drawPolygon(new int[]{180, 200, 220, 220, 200, 180},
                 new int[]{260, 250, 260, 280, 290, 280}, 6);
 
-        // Green dots
         g.setColor(Color.GREEN);
         g.fillOval(100, 70, 10, 10);
         g.fillOval(100, 100, 10, 10);
         g.fillOval(100, 130, 10, 10);
 
-        // Robot
         g.setColor(Color.CYAN);
         g.fillRect((int)robotX, (int)robotY, 20, 20);
         g.setColor(Color.BLACK);
